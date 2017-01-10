@@ -1,0 +1,6 @@
+[package]
+name = "redis-proxy"
+version = "0.1.0"
+authors = ["Jarrod Swart <jcswart@gmail.com>"]
+
+[dependencies]
