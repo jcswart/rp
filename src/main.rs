@@ -1,4 +1,5 @@
 use std::io::Read;
+use std::io::Write;
 use std::net::{TcpListener, TcpStream};
 
 fn main() {
@@ -8,11 +9,20 @@ fn main() {
     for stream in server.incoming() {
         match stream {
             Ok(mut stream2) => {
-                let mut buf = String::new();
-                let bytes_read = stream2.read_to_string(&mut buf);
-                println!("stream: {:?}", stream2);
-                println!("got a bite! {:?}", buf);
-                println!("bytes read {:?}", bytes_read);
+                let mut buf: [u8; 1] = [0; 1];
+                loop {
+                    let read = stream2.read_exact(&mut buf);
+                    match read {
+                        Ok(_) => {
+                            println!("{:?}", buf[0] as char);
+                            stream2.write(&buf);
+                        }
+                        Err(e) => {
+                            println!("err: {}", e);
+                            break;
+                        }
+                    }
+                }
             }
             Err(e) => {
                 println!("err: {}", e);
